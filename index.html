@@ -1,152 +1,256 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ScrollTalk – Ministry Scenario Game</title>
-
-  <style>
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen;
-      background: #0f172a;
-      color: #e5e7eb;
-    }
-
-    .container {
-      max-width: 720px;
-      margin: auto;
-      padding: 2rem 1.5rem;
-    }
-
-    h1, h2 {
-      color: #f8fafc;
-    }
-
-    .card {
-      background: #020617;
-      border-radius: 16px;
-      padding: 1.5rem;
-      margin-top: 1.5rem;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-    }
-
-    button {
-      width: 100%;
-      margin-top: 1rem;
-      padding: 0.9rem;
-      border-radius: 12px;
-      border: none;
-      background: #1e293b;
-      color: #e5e7eb;
-      font-size: 1rem;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #334155;
-    }
-
-    .scripture {
-      font-style: italic;
-      margin-top: 1rem;
-      color: #cbd5f5;
-    }
-
-    textarea {
-      width: 100%;
-      margin-top: 1rem;
-      padding: 1rem;
-      border-radius: 12px;
-      border: none;
-      min-height: 120px;
-      background: #020617;
-      color: #e5e7eb;
-    }
-
-    .hidden {
-      display: none;
-    }
-  </style>
-</head>
-
-<body>
-  <div class="container">
-    <h1>ScrollTalk</h1>
-    <p>A Scripture-based ministry scenario experience.</p>
-
-    <div id="scenario" class="card">
-      <h2>The Silent Season</h2>
-      <p>
-        You have been praying.  
-        You have been obedient.  
-        Nothing seems to be moving.
-      </p>
-
-      <button onclick="choose(1)">Assume God has forgotten me</button>
-      <button onclick="choose(2)">Take matters into my own hands</button>
-      <button onclick="choose(3)">Wait in prayer and obedience</button>
-      <button onclick="choose(4)">Stop expecting anything</button>
-    </div>
-
-    <div id="outcome" class="card hidden">
-      <h2 id="outcomeTitle"></h2>
-      <p id="outcomeText"></p>
-      <p id="scripture" class="scripture"></p>
-
-      <h3>Reflection</h3>
-      <p id="reflection"></p>
-
-      <textarea placeholder="Write what this revealed in your heart..."></textarea>
-
-      <button onclick="restart()">Return</button>
-    </div>
-  </div>
-
-  <script>
-    const outcomes = {
-      1: {
-        title: "When Doubt Speaks",
-        text: "Silence can feel like abandonment, but God is still present.",
-        scripture: "“The Lord is near to the brokenhearted.” — Psalm 34:18",
-        reflection: "What fear is shaping how you interpret God’s silence?"
+<script>
+const scenarios = [
+  {
+    id: 1,
+    title: "The Silent Season",
+    context: "God feels quiet. Prayers seem unanswered. You’re still showing up, but heaven feels distant.",
+    choices: [
+      {
+        text: "Assume God has left",
+        outcome: "Silence is not absence. God often works deepest when He speaks least.",
+        scripture: "Isaiah 55:8–9",
+        reflection: "What story are you telling yourself in the silence?"
       },
-      2: {
-        title: "When Control Replaces Trust",
-        text: "Moving ahead without God can create distance instead of peace.",
-        scripture: "“Trust in the Lord with all your heart.” — Proverbs 3:5",
-        reflection: "What are you trying to control instead of surrender?"
+      {
+        text: "Distract yourself",
+        outcome: "Distraction numbs discomfort but delays growth.",
+        scripture: "Psalm 46:10",
+        reflection: "What are you avoiding feeling?"
       },
-      3: {
-        title: "When Waiting Becomes Worship",
-        text: "Waiting with obedience honors God more than rushed movement.",
-        scripture: "“Be still before the Lord and wait patiently for Him.” — Psalm 37:7",
-        reflection: "Can you trust God even without reassurance?"
+      {
+        text: "Remain faithful",
+        outcome: "Faithfulness in silence strengthens trust.",
+        scripture: "Habakkuk 3:17–19",
+        reflection: "What does obedience look like without affirmation?"
       },
-      4: {
-        title: "When Hope Grows Tired",
-        text: "Unprocessed disappointment can quietly harden the heart.",
-        scripture: "“Hope deferred makes the heart sick.” — Proverbs 13:12",
-        reflection: "What disappointment have you stopped bringing to God?"
+      {
+        text: "Question God honestly",
+        outcome: "God welcomes honest prayer.",
+        scripture: "Psalm 62:8",
+        reflection: "What would honesty with God sound like right now?"
       }
-    };
+    ]
+  },
+  {
+    id: 2,
+    title: "Obedience vs Comfort",
+    context: "God is asking you to move, but comfort feels safer.",
+    choices: [
+      {
+        text: "Choose comfort",
+        outcome: "Comfort delays growth.",
+        scripture: "Luke 9:23",
+        reflection: "What comfort are you protecting?"
+      },
+      {
+        text: "Partially obey",
+        outcome: "Delayed obedience is still disobedience.",
+        scripture: "1 Samuel 15:22",
+        reflection: "Where are you negotiating?"
+      },
+      {
+        text: "Obey immediately",
+        outcome: "Peace follows alignment.",
+        scripture: "Psalm 128:1",
+        reflection: "What step of obedience is God asking of you?"
+      },
+      {
+        text: "Avoid the decision",
+        outcome: "Avoidance increases unrest.",
+        scripture: "James 4:17",
+        reflection: "What are you postponing?"
+      }
+    ]
+  },
+  {
+    id: 3,
+    title: "Identity & Insecurity",
+    context: "Comparison makes you question who you are.",
+    choices: [
+      {
+        text: "Compare yourself",
+        outcome: "Comparison steals joy.",
+        scripture: "2 Corinthians 10:12",
+        reflection: "Who triggers insecurity in you?"
+      },
+      {
+        text: "Perform for approval",
+        outcome: "Performance erodes authenticity.",
+        scripture: "Galatians 1:10",
+        reflection: "Where are you performing instead of resting?"
+      },
+      {
+        text: "Hide and withdraw",
+        outcome: "Hiding suffocates calling.",
+        scripture: "Matthew 5:15",
+        reflection: "What part of yourself are you hiding?"
+      },
+      {
+        text: "Anchor identity in God",
+        outcome: "God-rooted identity produces peace.",
+        scripture: "1 Peter 2:9",
+        reflection: "What has God already spoken over you?"
+      }
+    ]
+  },
+  {
+    id: 4,
+    title: "Offense & Forgiveness",
+    context: "You were hurt, and it stayed with you.",
+    choices: [
+      {
+        text: "Hold the offense",
+        outcome: "Unforgiveness becomes a prison.",
+        scripture: "Hebrews 12:15",
+        reflection: "What memory keeps resurfacing?"
+      },
+      {
+        text: "Distance without forgiving",
+        outcome: "Distance doesn’t heal wounds.",
+        scripture: "Romans 12:18",
+        reflection: "Where have you withdrawn instead of healed?"
+      },
+      {
+        text: "Forgive without apology",
+        outcome: "Forgiveness restores freedom.",
+        scripture: "Colossians 3:13",
+        reflection: "Who benefits if you forgive?"
+      },
+      {
+        text: "Forgive with wisdom",
+        outcome: "Boundaries and forgiveness can coexist.",
+        scripture: "Matthew 10:16",
+        reflection: "What boundary does healing require?"
+      }
+    ]
+  },
+  {
+    id: 5,
+    title: "Calling vs Fear",
+    context: "You feel called, but fear speaks louder.",
+    choices: [
+      {
+        text: "Let fear decide",
+        outcome: "Fear shrinks obedience.",
+        scripture: "2 Timothy 1:7",
+        reflection: "What fear sounds reasonable right now?"
+      },
+      {
+        text: "Wait until ready",
+        outcome: "Readiness follows obedience.",
+        scripture: "Exodus 4:12",
+        reflection: "What step are you postponing?"
+      },
+      {
+        text: "Obey despite fear",
+        outcome: "Courage is obedience with fear present.",
+        scripture: "Joshua 1:9",
+        reflection: "What would you do if fear didn’t lead?"
+      },
+      {
+        text: "Ignore the calling",
+        outcome: "Calling waits even when ignored.",
+        scripture: "1 Corinthians 9:16",
+        reflection: "What keeps resurfacing?"
+      }
+    ]
+  },
+  {
+    id: 6,
+    title: "Waiting vs Forcing",
+    context: "You’re tired of waiting and tempted to rush.",
+    choices: [
+      {
+        text: "Force the outcome",
+        outcome: "Forced doors lead to struggle.",
+        scripture: "Proverbs 16:9",
+        reflection: "Where have you rushed?"
+      },
+      {
+        text: "Settle for less",
+        outcome: "Settling compromises fulfillment.",
+        scripture: "Hebrews 10:35",
+        reflection: "What promise feels delayed?"
+      },
+      {
+        text: "Wait with resentment",
+        outcome: "Resentment poisons patience.",
+        scripture: "Psalm 37:7",
+        reflection: "What emotion shapes your waiting?"
+      },
+      {
+        text: "Wait with trust",
+        outcome: "Waiting becomes worship.",
+        scripture: "Isaiah 40:31",
+        reflection: "What does faithful waiting look like?"
+      }
+    ]
+  },
+  {
+    id: 7,
+    title: "Trust After Disappointment",
+    context: "You obeyed, but it still didn’t work out.",
+    choices: [
+      {
+        text: "Guard your heart too closely",
+        outcome: "Protection can limit faith.",
+        scripture: "Proverbs 4:23",
+        reflection: "What expectation are you afraid to hold?"
+      },
+      {
+        text: "See it as failure",
+        outcome: "Disappointment isn’t defeat.",
+        scripture: "Psalm 138:8",
+        reflection: "Where have you blamed yourself?"
+      },
+      {
+        text: "Withdraw spiritually",
+        outcome: "Distance deepens weariness.",
+        scripture: "James 4:8",
+        reflection: "Where have you disengaged?"
+      },
+      {
+        text: "Choose trust again",
+        outcome: "Mature faith trusts again.",
+        scripture: "Job 13:15",
+        reflection: "What does trusting again require?"
+      }
+    ]
+  }
+];
 
-    function choose(option) {
-      document.getElementById("scenario").classList.add("hidden");
+const app = document.getElementById("app");
 
-      const o = outcomes[option];
-      document.getElementById("outcomeTitle").innerText = o.title;
-      document.getElementById("outcomeText").innerText = o.text;
-      document.getElementById("scripture").innerText = o.scripture;
-      document.getElementById("reflection").innerText = o.reflection;
+function showMenu() {
+  app.innerHTML = `
+    <h1>ScrollTalk</h1>
+    <p>Select a scenario:</p>
+    ${scenarios.map(s => `<button onclick="loadScenario(${s.id})">${s.title}</button>`).join("")}
+  `;
+}
 
-      document.getElementById("outcome").classList.remove("hidden");
-    }
+function loadScenario(id) {
+  const s = scenarios.find(x => x.id === id);
+  app.innerHTML = `
+    <h2>${s.title}</h2>
+    <p>${s.context}</p>
+    ${s.choices.map(c =>
+      `<button onclick="showResult('${c.outcome}','${c.scripture}','${c.reflection}')">${c.text}</button>`
+    ).join("")}
+    <br><br>
+    <button onclick="showMenu()">Back to Menu</button>
+  `;
+}
 
-    function restart() {
-      document.getElementById("outcome").classList.add("hidden");
-      document.getElementById("scenario").classList.remove("hidden");
-    }
-  </script>
-</body>
-</html>
+function showResult(outcome, scripture, reflection) {
+  app.innerHTML = `
+    <h3>Outcome</h3>
+    <p>${outcome}</p>
+    <p><strong>Scripture:</strong> ${scripture}</p>
+    <p><strong>Reflection:</strong> ${reflection}</p>
+    <button onclick="showMenu()">Choose Another Scenario</button>
+  `;
+}
+
+showMenu();
+</script>
