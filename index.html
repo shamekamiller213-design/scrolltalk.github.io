@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ScrollTalk – Ministry Scenario Game</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen;
+      background: #0f172a;
+      color: #e5e7eb;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: auto;
+      padding: 2rem 1.5rem;
+    }
+
+    h1, h2 {
+      color: #f8fafc;
+    }
+
+    .card {
+      background: #020617;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+
+    button {
+      width: 100%;
+      margin-top: 1rem;
+      padding: 0.9rem;
+      border-radius: 12px;
+      border: none;
+      background: #1e293b;
+      color: #e5e7eb;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #334155;
+    }
+
+    .scripture {
+      font-style: italic;
+      margin-top: 1rem;
+      color: #cbd5f5;
+    }
+
+    textarea {
+      width: 100%;
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 12px;
+      border: none;
+      min-height: 120px;
+      background: #020617;
+      color: #e5e7eb;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>ScrollTalk</h1>
+    <p>A Scripture-based ministry scenario experience.</p>
+
+    <div id="scenario" class="card">
+      <h2>The Silent Season</h2>
+      <p>
+        You have been praying.  
+        You have been obedient.  
+        Nothing seems to be moving.
+      </p>
+
+      <button onclick="choose(1)">Assume God has forgotten me</button>
+      <button onclick="choose(2)">Take matters into my own hands</button>
+      <button onclick="choose(3)">Wait in prayer and obedience</button>
+      <button onclick="choose(4)">Stop expecting anything</button>
+    </div>
+
+    <div id="outcome" class="card hidden">
+      <h2 id="outcomeTitle"></h2>
+      <p id="outcomeText"></p>
+      <p id="scripture" class="scripture"></p>
+
+      <h3>Reflection</h3>
+      <p id="reflection"></p>
+
+      <textarea placeholder="Write what this revealed in your heart..."></textarea>
+
+      <button onclick="restart()">Return</button>
+    </div>
+  </div>
+
+  <script>
+    const outcomes = {
+      1: {
+        title: "When Doubt Speaks",
+        text: "Silence can feel like abandonment, but God is still present.",
+        scripture: "“The Lord is near to the brokenhearted.” — Psalm 34:18",
+        reflection: "What fear is shaping how you interpret God’s silence?"
+      },
+      2: {
+        title: "When Control Replaces Trust",
+        text: "Moving ahead without God can create distance instead of peace.",
+        scripture: "“Trust in the Lord with all your heart.” — Proverbs 3:5",
+        reflection: "What are you trying to control instead of surrender?"
+      },
+      3: {
+        title: "When Waiting Becomes Worship",
+        text: "Waiting with obedience honors God more than rushed movement.",
+        scripture: "“Be still before the Lord and wait patiently for Him.” — Psalm 37:7",
+        reflection: "Can you trust God even without reassurance?"
+      },
+      4: {
+        title: "When Hope Grows Tired",
+        text: "Unprocessed disappointment can quietly harden the heart.",
+        scripture: "“Hope deferred makes the heart sick.” — Proverbs 13:12",
+        reflection: "What disappointment have you stopped bringing to God?"
+      }
+    };
+
+    function choose(option) {
+      document.getElementById("scenario").classList.add("hidden");
+
+      const o = outcomes[option];
+      document.getElementById("outcomeTitle").innerText = o.title;
+      document.getElementById("outcomeText").innerText = o.text;
+      document.getElementById("scripture").innerText = o.scripture;
+      document.getElementById("reflection").innerText = o.reflection;
+
+      document.getElementById("outcome").classList.remove("hidden");
+    }
+
+    function restart() {
+      document.getElementById("outcome").classList.add("hidden");
+      document.getElementById("scenario").classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>
